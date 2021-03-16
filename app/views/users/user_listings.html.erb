@@ -1,0 +1,4 @@
+ <h2>Listings for <%= @shown_user.username %></h2>
+ <% @listings.each do |listing| %>
+    <%=link_to listing.title, listing_path(id: listing.id) %><br>
+ <% end %>

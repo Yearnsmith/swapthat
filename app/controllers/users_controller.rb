@@ -10,6 +10,20 @@ class UsersController < ApplicationController
   def show
     @user = User.find_by(username: params[:username])
   end
+
   def destroy
   end
+
+  def user_listings
+    # @shown_user is the user who's profile is in the url bar.
+    @shown_user = User.find_by(username: params[:username])
+    @listings = @shown_user.listings
+  end
+
+  private
+
+  # def user_params
+  #   params.require(:user).permit(:username)
+  # end
+
 end

@@ -1,7 +1,10 @@
-<h1>Users</h1>
-<p>The wonderful users of ThisThat!</p>
+<h2>The wonderful users of ThisThat!</h2>
 <div>
     <% @users.each do |user| %>
-        <%= user.username %>
+
+        <%# For some reason I need to provide the username in the params.
+            Probably since I'm using the username as the url id.
+            This will probably change if I implement the FriendlyId gem %>
+        <%=link_to user.username, user_path(username: user.username) %><br>
     <% end %>
 </div>
