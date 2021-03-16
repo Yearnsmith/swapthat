@@ -8,14 +8,20 @@
   <%= @listing.description %>
 </p> 
 
-<p>
-  <strong>Seller:</strong>
-  <%= @listing.seller.username %>
-</p>
-
+<% if @listing.suggestion %>
+    <p>
+        <strong>Swap Suggestion:</strong><br>
+        <%= @listing.suggestion %>
+    </p>
+<% end %>
 <p>
   <strong>Available:</strong>
   <%= @listing.locked == false ? "Yes" : "No" %>
+</p>
+
+<p>
+  <strong>Seller:</strong>
+  <%= @listing.seller.username %>
 </p>
 
 <%= link_to 'Edit', edit_listing_path(@listing) %> |
