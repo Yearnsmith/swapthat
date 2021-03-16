@@ -1,23 +1,21 @@
-<p id="notice"><%= notice %></p>
-
 <p>
   <strong>Title:</strong>
   <%= @listing.title %>
 </p>
 
 <p>
-  <strong>Description:</strong>
+  <strong>Description:</strong><br>
   <%= @listing.description %>
-</p>
+</p> 
 
 <p>
   <strong>Seller:</strong>
-  <%= @listing.seller_id %>
+  <%= @listing.seller.username %>
 </p>
 
 <p>
-  <strong>Locked:</strong>
-  <%= @listing.locked %>
+  <strong>Available:</strong>
+  <%= @listing.locked == false ? "Yes" : "No" %>
 </p>
 
 <%= link_to 'Edit', edit_listing_path(@listing) %> |

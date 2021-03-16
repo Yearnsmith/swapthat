@@ -2,6 +2,7 @@ class ApplicationController < ActionController::Base
   # Instructions for allowing login with username:
   # => https://github.com/heartcombo/devise/wiki/How-To%3A-Allow-users-to-sign-in-using-their-username-or-email-address
     before_action :configure_permitted_parameters, if: :devise_controller?
+    before_action :set_user
 
   protected
 
@@ -11,4 +12,11 @@ class ApplicationController < ActionController::Base
     devise_parameter_sanitizer.permit :sign_in, keys: [:login, :password]
     devise_parameter_sanitizer.permit :account_update, keys: added_attrs
   end
+
+  def set_user
+    if current_user
+      @user = current_user
+    end
+  end
+
 end

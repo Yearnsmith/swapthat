@@ -1,6 +1,8 @@
 class ListingsController < ApplicationController
+  # include UserConcerns
   before_action :authenticate_user!, only: [:new, :create, :edit, :update, :destroy]
-  before_action :set_listing, only: %i[ show edit update destroy ]
+  before_action :set_listing, only: [ :show, :edit, :update, :destroy ]
+  before_action :verify_seller, only: [ :edit, :update, :destroy]
 
   # GET /listings or /listings.json
   def index
@@ -11,6 +13,11 @@ class ListingsController < ApplicationController
   def show
   end
 
+  # GET /u/:username/listings
+  # def user_listings
+  #   @listings = @user.listings
+  # end
+  
   # GET /listings/new
   def new
     @listing = Listing.new
@@ -22,15 +29,15 @@ class ListingsController < ApplicationController
 
   # POST /listings or /listings.json
   def create
-    @listing = Listing.new(listing_params)
+    @listing = Listing.new(seller_id: @user.id, title: listing_params[:title], description: listing_params[:description])
 
     respond_to do |format|
       if @listing.save
         format.html { redirect_to @listing, notice: "Listing was successfully created." }
-        format.json { render :show, status: :created, location: @listing }
+        # format.json { render :show, status: :created, location: @listing }
       else
         format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @listing.errors, status: :unprocessable_entity }
+        # format.json { render json: @listing.errors, status: :unprocessable_entity }
       end
     end
   end
@@ -50,6 +57,7 @@ class ListingsController < ApplicationController
 
   # DELETE /listings/1 or /listings/1.json
   def destroy
+
     @listing.destroy
     respond_to do |format|
       format.html { redirect_to listings_url, notice: "Listing was successfully destroyed." }
@@ -63,8 +71,17 @@ class ListingsController < ApplicationController
       @listing = Listing.find(params[:id])
     end
 
+    def verify_seller
+      unless current_user && (@listing.seller == current_user)
+        flash[:alert] = "You are not authorised to do this"
+        # redirect_back(fallback_location: root_path)
+        render :show, status: :forbidden
+      end
+    end
+
     # Only allow a list of trusted parameters through.
     def listing_params
-      params.require(:listing).permit(:title, :description, :seller_id, :locked)
+      user = current_user
+      params.require(:listing).permit(:title, :description)
     end
 end
