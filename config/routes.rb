@@ -28,6 +28,8 @@ Rails.application.routes.draw do
   resources :listings do
     resources :trades, only: [:create, :edit], module: :listings
   end
+
+  resources :trades, only: [:show]
  
   # scope shallow_path: "u" do
   #   resources :user do
