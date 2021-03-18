@@ -14,6 +14,12 @@ class UsersController < ApplicationController
   def destroy
   end
 
+  ## Redirect to modal, very smelly, but might work for popping up
+  ## a modal displaying a Trade instance?
+  # def test_route
+  #   redirect_to "#{user_listings_path}#test"
+  # end
+
   def user_listings
     # @shown_user is the user who's profile is in the url bar.
     @shown_user = User.find_by(username: params[:username])

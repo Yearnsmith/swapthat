@@ -1,0 +1,36 @@
+<h3>Make an offer for <%= @listing.title %></h3>
+<%if user_signed_in? %>
+
+  <%= form_with(model: [listing, Trade.new(listing: @listing)], local: true) do |form| %>
+ 
+    <% if @trade.errors.any? %>
+      <div id="error_explanation">
+        <h2><%= pluralize(trade.errors.count, "error") %> prohibited this trade from being saved:</h2>
+        <ul>
+          <% @trade.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end #errors %>
+    <%# T2A2-18 As a user I want to make an offer on other peoples listings%>
+    <div class="field">
+        <%# collection_select with method that gets all current_user's listings with locked: false %>
+        <%# if time permits, do a fancy checkboxes rendering these as cards %> 
+        <h4>Select a Listing</h4>
+        <%= form.collection_select :offer_id, current_user.listings_to_offer, :id, :title, prompt: true %>
+    </div>
+    <strong>Or</strong>
+    <div>
+      <h4>Make new listing</h4>
+      <%= render partial: 'listings/nested_form', locals: {form: form, listing: Listing.new}%>
+    </div>
+  <div class="actions" >
+    <%= form.submit %>
+  </div>
+
+  <%end #form %>
+<% else %>
+        <%= link_to "Login", new_user_session_path, class: "has-background-dark has-text-light p-2" %> | 
+    <%= link_to "Sign Up", new_user_registration_path, class: "has-background-dark has-text-light p-2" %>
+<% end #if %>

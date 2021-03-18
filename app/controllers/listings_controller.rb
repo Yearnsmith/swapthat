@@ -11,12 +11,9 @@ class ListingsController < ApplicationController
 
   # GET /listings/1 or /listings/1.json
   def show
+    @listing = Listing.find(params[:id])
+    @trade = Trade.new(listing: @listing)
   end
-
-  # GET /u/:username/listings
-  # def user_listings
-  #   @listings = @user.listings
-  # end
   
   # GET /listings/new
   def new

@@ -5,6 +5,10 @@ class User < ApplicationRecord
   ## A user can have many listings. Listing refers to User as :seller
   has_many :listings, foreign_key: :seller_id
 
+  # unique validators
+  validates_uniqueness_of :email
+  validates :username, presence: true, uniqueness: { case_sensitive: false }
+
   # T2A2-13 As a user I want to log in
   
   ## Devise methods
@@ -30,7 +34,9 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable, #:omniauthable, # => Add last
          :recoverable, :rememberable, :validatable, :trackable, :confirmable
 
-  # unique validators
-  validates_uniqueness_of :email
-  validates :username, presence: true, uniqueness: { case_sensitive: false }
+
+  # As a user I want to make offers on listings
+  def listings_to_offer
+    available_listings(self)
+  end
 end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_03_16_074456) do
+ActiveRecord::Schema.define(version: 2021_03_16_135927) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -24,6 +24,19 @@ ActiveRecord::Schema.define(version: 2021_03_16_074456) do
     t.datetime "updated_at", precision: 6, null: false
     t.text "suggestion"
     t.index ["seller_id"], name: "index_listings_on_seller_id"
+  end
+
+  create_table "trades", force: :cascade do |t|
+    t.string "title", limit: 110, null: false
+    t.bigint "listing_id", null: false
+    t.bigint "offer_id", null: false
+    t.boolean "seller_accepted"
+    t.boolean "buyer_accepted"
+    t.boolean "active", default: true, null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["listing_id"], name: "index_trades_on_listing_id"
+    t.index ["offer_id"], name: "index_trades_on_offer_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -52,4 +65,6 @@ ActiveRecord::Schema.define(version: 2021_03_16_074456) do
   end
 
   add_foreign_key "listings", "users", column: "seller_id"
+  add_foreign_key "trades", "listings"
+  add_foreign_key "trades", "listings", column: "offer_id"
 end

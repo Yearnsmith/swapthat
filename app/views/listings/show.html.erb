@@ -1,28 +1,56 @@
-<p>
-  <strong>Title:</strong>
-  <%= @listing.title %>
-</p>
+<h2><%= @listing.title %></h2>
 
 <p>
-  <strong>Description:</strong><br>
+  <h4 style="display: inline">Seller:</h4>
+  <%= @listing.seller.username %> | 
+  <%= @listing.locked == false ? "<strong>Available</strong>".html_safe : "This listing is unavailable for trade" %>
+</p>
+<p>
+  <h4>Description</h4>
   <%= @listing.description %>
 </p> 
 
-<% if @listing.suggestion %>
+<% if @listing.suggestion != "" %>
     <p>
-        <strong>Swap Suggestion:</strong><br>
+        <h4>Swap Suggestion:</h4>
         <%= @listing.suggestion %>
     </p>
 <% end %>
-<p>
-  <strong>Available:</strong>
-  <%= @listing.locked == false ? "Yes" : "No" %>
-</p>
 
-<p>
-  <strong>Seller:</strong>
-  <%= @listing.seller.username %>
-</p>
+<%= link_to 'Edit', edit_listing_path(@listing) %>
 
-<%= link_to 'Edit', edit_listing_path(@listing) %> |
+<%# Will use this to dynamically display form. When I have time %>
+<%#= link_to 'Make an offer!', new_trade_path, listing: @listing, method: :post %>
+
+<% unless user_signed_in? && (@listing.seller == current_user) %>
+
+  <div id="form_card" style="margin-bottom:1rem;">
+
+    <% if @listing.locked? %>
+      <p>
+        This listing is marked pending. It has probably been offered to a listing.
+      </p>
+    <% else %>
+      <%= render partial: "trades/form", locals: {listing: @listing} %> 
+    <% end %>
+
+  </div>
+
+<%end%>
+
+<% if @listing.offers.any? %>
+  <div id="all-trades" style="background-color: #bbbbbb ;padding:1rem 1rem; margin: 1rem 1.5rem;">
+
+    <h3 style="margin-top:0;">Pending Offers</h3>
+
+    <% @listing.as_listings.each do |trade| %>
+
+      <div style="border: 1px solid black; padding:.5rem; margin:.75rem 2.5rem">
+        <h4 style="margin:0.5em 0;"><%= trade.title %></h4>
+        <strong>Offered by</strong> <%= trade.offer.seller.username %>
+        <p><%= trade.offer.description %></p>
+      </div>
+    <%end%>
+  </div>
+<%end%>
 <%= link_to 'Back', listings_path %>
