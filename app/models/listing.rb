@@ -7,10 +7,12 @@ class Listing < ApplicationRecord
   # T2A2-18 As a user I want to make an offer on
   # other people's listings
   # THIS IS LISTING
+  # TODO: change :as_listings to :as_listing_in_trades
   has_many :as_listings, foreign_key: :listing_id, class_name: 'Trade'
   has_many :offers, through: :as_listings
 
   # THIS IS OFFERING
+  # TODO: change :as_offers to :as_offers_in_trades
   has_many :as_offers, foreign_key: :offer_id, class_name: 'Trade'
   has_many :listings, through: :as_offers
 

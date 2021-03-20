@@ -1,7 +1,7 @@
 class ListingsController < ApplicationController
   # include UserConcerns
   before_action :authenticate_user!, only: [:new, :create, :edit, :update, :destroy]
-  before_action :set_listing, only: [ :show, :edit, :update, :destroy ]
+  before_action :set_listing, only: [ :show, :create, :edit, :update, :destroy ]
   before_action :verify_seller, only: [ :edit, :update, :destroy]
 
   # GET /listings or /listings.json
@@ -11,8 +11,8 @@ class ListingsController < ApplicationController
 
   # GET /listings/1 or /listings/1.json
   def show
-    @listing = Listing.find(params[:id])
-    @trade = Trade.new(listing: @listing)
+    # @current_listing = Listing.find(params[:id])
+    # @trade = Trade.new(listing: @current_listing)
   end
   
   # GET /listings/new
@@ -32,11 +32,9 @@ class ListingsController < ApplicationController
     
     respond_to do |format|
       if @listing.save
-        format.html { redirect_to @listing, notice: "Listing was successfully created." }
-        # format.json { render :show, status: :created, location: @listing }
+        format.html { redirect_to :listing, notice: "Listing was successfully created." }
       else
         format.html { render :new, status: :unprocessable_entity }
-        # format.json { render json: @listing.errors, status: :unprocessable_entity }
       end
     end
   end
@@ -80,7 +78,7 @@ class ListingsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def listing_params
-      user = current_user
+      # user = current_user
       params.require(:listing).permit(:title, :description, :suggestion)
     end
 end

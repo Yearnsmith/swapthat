@@ -1,9 +1,7 @@
-<h3>Make an offer for <%= @listing.title %></h3>
+<h3>Make an offer</h3>
 <%if user_signed_in? %>
-
-  <%= form_with(model: [listing, Trade.new(listing: @listing)], local: true) do |form| %>
- 
-    <% if @trade.errors.any? %>
+  <%= form_with model: [current_listing, @trade = Trade.new(listing_id: current_listing)], local: true do |form| %>
+    <% if @trade.errors.any? %> 
       <div id="error_explanation">
         <h2><%= pluralize(trade.errors.count, "error") %> prohibited this trade from being saved:</h2>
         <ul>
@@ -12,25 +10,42 @@
           <% end %>
         </ul>
       </div>
-    <% end #errors %>
+    <% end %> <%# end errors %>
     <%# T2A2-18 As a user I want to make an offer on other peoples listings%>
     <div class="field">
         <%# collection_select with method that gets all current_user's listings with locked: false %>
         <%# if time permits, do a fancy checkboxes rendering these as cards %> 
         <h4>Select a Listing</h4>
+        <%= form.label :offer_id, "Your listings" %>
         <%= form.collection_select :offer_id, current_user.listings_to_offer, :id, :title, prompt: true %>
     </div>
+
     <strong>Or</strong>
+
     <div>
       <h4>Make new listing</h4>
-      <%= render partial: 'listings/nested_form', locals: {form: form, listing: Listing.new}%>
+        <div class="field">
+          <%= label_tag "trade[listing_attributes][title]", "Listing Title" %>
+          <%= text_field_tag "trade[listing_attributes][title]" %>          
+        </div>
+
+        <div class="field">
+          <%= label_tag "trade[listing_attributes][description", "Listing Description" %>
+          <%= text_area_tag "trade[listing_attributes][description]" %>
+        </div>
+
+        <div class="field">
+          <%#= label_tag "trade[listing_attributes][suggestion" %>
+          <!-- <label for="trade_listing_attributes_suggestion">Trade suggestion</label>
+          <textarea name="trade[listing_attributes][suggestion]" id="trade_listing_attributes_suggestion"></textarea> -->
+        </div>
     </div>
   <div class="actions" >
     <%= form.submit %>
   </div>
 
-  <%end #form %>
+  <% end %><%# end form %>
 <% else %>
-        <%= link_to "Login", new_user_session_path, class: "has-background-dark has-text-light p-2" %> | 
-    <%= link_to "Sign Up", new_user_registration_path, class: "has-background-dark has-text-light p-2" %>
-<% end #if %>
+    <%= link_to "Login", new_user_session_path %> |
+    <%= link_to "Sign Up", new_user_registration_path %>
+<% end %><%# end if %>

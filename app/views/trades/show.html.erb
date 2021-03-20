@@ -1,14 +1,21 @@
 <p id="notice"><%= notice %></p>
-
+<h3><%= @trade.title %>
 <p>
-  <strong>Listing:</strong>
-  <%= @trade.listing_id %>
+  <h4> <%= @trade.listing.title %></h4>
+  <strong>Current Owner</strong> <%= @trade.listing.seller %>
 </p>
 
 <p>
-  <strong>Offering:</strong>
-  <%= @trade.offering_id %>
+  <h4><%= @trade.offer.title %></h4>
+  <strong>Current Owner</strong> <%= @trade.offer.seller %>
 </p>
 
-<%= link_to 'Edit', edit_trade_path(@trade) %> |
-<%= link_to 'Back', trades_path %>
+<%= form_with model: @trade, local: true do |form| %>
+
+<h3>Accept Trade?</h3>
+<%= form.radio_button :trade_reception, "Accept" %> <%= form.label :trade_reception_accept %>
+<%= form.radio_button :trade_reception, "Decline" %> <%= form.label :trade_reception_decline %>
+
+<% end %>
+
+<%= link_to 'Edit', edit_listing_trade_path(@trade) %> <%= link_to 'Back', redirect_back(fallback_location: listing_path(@trade.listing)) %>

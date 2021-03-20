@@ -1,37 +1,38 @@
 <h2><%= @listing.title %></h2>
 
+<h4 style="display: inline">Seller:</h4>
 <p>
-  <h4 style="display: inline">Seller:</h4>
   <%= @listing.seller.username %> | 
-  <%= @listing.locked == false ? "<strong>Available</strong>".html_safe : "This listing is unavailable for trade" %>
+  <%= @listing.locked == false ? "<strong>Available</strong>".html_safe : "<strong>This listing is unavailable for trade</strong".html_safe %>
 </p>
+
+<h4>Description</h4>
 <p>
-  <h4>Description</h4>
   <%= @listing.description %>
 </p> 
 
 <% if @listing.suggestion != "" %>
-    <p>
-        <h4>Swap Suggestion:</h4>
-        <%= @listing.suggestion %>
-    </p>
+  <h4>Swap Suggestion:</h4>
+  <p>
+    <%= @listing.suggestion %>
+  </p>
 <% end %>
 
 <%= link_to 'Edit', edit_listing_path(@listing) %>
 
 <%# Will use this to dynamically display form. When I have time %>
-<%#= link_to 'Make an offer!', new_trade_path, listing: @listing, method: :post %>
+<%#= link_to 'Make an offer!', new_trade_path, listing: @current_listing, method: :post %>
 
 <% unless user_signed_in? && (@listing.seller == current_user) %>
 
   <div id="form_card" style="margin-bottom:1rem;">
 
     <% if @listing.locked? %>
-      <p>
+      <p style="font-size: 2rem">
         This listing is marked pending. It has probably been offered to a listing.
       </p>
     <% else %>
-      <%= render partial: "trades/form", locals: {listing: @listing} %> 
+      <%= render partial: "trades/form", locals: { current_listing: @listing } %>
     <% end %>
 
   </div>

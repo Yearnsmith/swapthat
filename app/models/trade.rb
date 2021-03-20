@@ -5,4 +5,5 @@ class Trade < ApplicationRecord
   belongs_to :offer, class_name: 'Listing'
 
   accepts_nested_attributes_for :listing, reject_if: :all_blank
+  # accepts_nested_attributes_for :offer, reject_if: :all_blank
 end
