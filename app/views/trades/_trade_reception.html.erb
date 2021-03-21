@@ -1,0 +1,37 @@
+<% puts case display_trade_status @trade %>
+<% when :put_buttons %>
+    <h3 style="text-align: center">Accept Trade?</h3>
+    <%= button_to "Decline", url_for(controller:'trades', action: 'update', trade: @trade, respond: 'decline'), method: :patch%>
+    <%= button_to "Accept", url_for(controller:'trades', action: 'update', trade: @trade, respond: 'accept'), method: :patch%>
+<% when :seller_accepted %>
+    <% puts "SELLER_ACCEPTED" %>
+    <h3>Awaiting Confirmation</h3>
+    <p>
+        <%= current_user ||= current_user == @trade.seller_id ? "You have" : "#{@trade.seller_username} has" %> accepted this offer.
+    </p>
+<% when :buyer_confirmed %>
+    <h3 style="text-align: center">Trade Confirmed</h3>
+    This trade has been accepted by both parties! :)
+<% else %>
+    <h3 style="text-align: center">Trade Pending</h3>
+<% end %>
+<%
+=begin%>
+<%= form_with model: @trade, local: true do |form| %>
+
+    <div style="display: flex; justify-content: space-around;">
+        <span style="display: flex">
+            <%= form.radio_button :trade_reception, "Decline" %>
+            <%= form.label :trade_reception_decline, "Decline" %>
+        </span>
+        <span style="display: flex">
+            <%= form.radio_button :trade_reception, "Accept" %>
+            <%= form.label :trade_reception_accept, "Accept" %>
+        </span>
+    </div>
+    <% form.submit "Submit Answer" %>
+
+<% end %>
+<%
+=end %>
+

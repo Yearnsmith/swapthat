@@ -4,6 +4,10 @@ class Listing < ApplicationRecord
   ## => Users can both make listings (as a seller) and offer their own listings (as a buyer).
   belongs_to :seller, class_name: 'User' # May change :seller to owner?
 
+  #Passing these through to Trade:
+  delegate :username, to: :seller
+  delegate :id, to: :seller, prefix: :seller
+  # delegate :class, to: :seller, prefix: true
   # T2A2-18 As a user I want to make an offer on
   # other people's listings
   # THIS IS LISTING

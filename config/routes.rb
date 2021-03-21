@@ -26,10 +26,10 @@ Rails.application.routes.draw do
   # nests trades in listings, allows for listings/trades controller, which will
   # be used to pass @listing to trades#new.
   resources :listings do
-    resources :trades, only: [:create, :edit], module: :listings
+    resources :trades, only: [:create], module: :listings
   end
 
-  resources :trades, only: [:show]
+  resources :trades, only: [:show, :edit, :update]
  
   # scope shallow_path: "u" do
   #   resources :user do

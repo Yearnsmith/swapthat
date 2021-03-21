@@ -1,17 +1,15 @@
 class TradesController < ApplicationController
   before_action :authenticate_user!, only: [:new, :create, :edit, :update, :destroy]
-  before_action :set_trade, only: %i[ show edit update destroy ]
+  before_action :set_trade, only: %i[ show edit destroy ]
   # before_action :set_listing, only: %i[create edit update]
 
   # GET /trades or /trades.json
   def index
-    @trades = Trade.all
+    # @trades = Trade.eager_load(:trades)
   end
-
   # GET /trades/1 or /trades/1.json
   def show
   end
-
   # GET /trades/new
   # def new
   #   @trade = 
@@ -29,7 +27,7 @@ class TradesController < ApplicationController
     # Create a new trade using @listing's id
     # Store the new trade in instance variable
     if trade_params["offer_id"] != ""
-      @trade = @listing.as_listings.new(trade_params) #wrong?
+      @trade = @current_listing.as_listings.new(trade_params) #wrong?
     else
       @offer = trade_params[:listing_attributes]
       @trade = @current_listing.as_listings.new(
@@ -46,30 +44,46 @@ class TradesController < ApplicationController
       render "listings/show", flash.now[:alert] = "This item is currently being offered to a trade" and return
     end
     # Set title for trade using titles of both listings.
-    @trade.title = "#{@trade.offer.title } for #{ @current_listing.title }"
+    @trade.title = "#{@trade.offer_title } for #{ @current_listing.title }"
 
       # Try to save listing
-      if @trade.save
+      if @trade.save!
         # If successful, mark the offer as locked
-        @trade.offer.update(locked: true)
+        @trade.offer.update!(locked: true)
         # Redirect to @listing page
         # render "listings/show", notice: "Offer was created successfully!"
-        redirect_to @current_listing, notice: "Offer was created successfully!"
+        redirect_to @current_listing, notice: "Offer was created successfully. Good luck! :)"
       else
         redirect_back fallback_location: listings_path, flash: { status: :unprocessable_entity}
       end
   end
   # PATCH/PUT /trades/1 or /trades/1.json
   def update
-    respond_to do |format|
-      if @trade.update(trade_params)
-        format.html { redirect_to @trade, notice: "Trade was successfully updated." }
-        format.json { render :show, status: :ok, location: @trade }
-      else
-        format.html { render :edit, status: :unprocessable_entity }
-        format.json { render json: @trade.errors, status: :unprocessable_entity }
+    trade = Trade.find(params["trade"].to_i)
+    if params["respond"] == "accept"
+      if current_user.id == trade.listing.seller_id
+        trade.listing.update(locked: true)
+        disable_other_offers(trade)
+        trade.update(seller_response: "accept")
+        redirect_to trade.listing, notice: "Offer accepted!" and return
+      elsif current_user.id == trade.offer.seller.id
+        trade.update(buyer_response: "confirm")
+        trade.offer.update(locked: true)
+        redirect_to trade.listing, notice: "Trade confirmed. Hooray!" and return
       end
     end
+    redirect_to trade.listing, alert: "Oops, something went wrong!" and return
+    # if !params.include? "trade"
+    #   @trade.
+    # respond_to do |format|
+    #   if @trade.update(trade_params)
+    #     format.html { redirect_to @trade, notice: "Trade was successfully updated." }
+    #     format.json { render :show, status: :ok, location: @trade }
+    #   else
+    #     format.html { render :edit, status: :unprocessable_entity }
+    #     format.json { render json: @trade.errors, status: :unprocessable_entity }
+    #   end
+    # end
   end
 
   # DELETE /trades/1 or /trades/1.json
@@ -82,9 +96,17 @@ class TradesController < ApplicationController
   end
 
   private
+
+  def disable_other_offers(trade)
+    Trade.includes(:offer).where("trades.offer_id != ?", trade.offer.id).map {|t| t.update!(active: false)}
+  end
+    # def self.to_struct
+    #   Struct.new(*(k = self.attributes.keys)).new(*self.attributes.values_at(*k))
+    # end
+
     # Use callbacks to share common setup or constraints between actions.
     def set_trade
-      @trade = Trade.find(params[:id])
+     @trade = Trade.find(params[:id])
     end
 
     # Only allow a list of trusted parameters through.
@@ -101,6 +123,10 @@ class TradesController < ApplicationController
         flash[:alert] = "You are not authorised to do this"
         redirect_back(fallback_location: :index)
       end
+    end
+
+    def link_to_back
+      redirect_back(fallback_location: :trade)
     end
 
 end

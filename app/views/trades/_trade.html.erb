@@ -1,0 +1,25 @@
+<h3><%= @trade.title %></h3>
+<%if @trade.buyer_response != "decline" %>
+    <h4>Offer Pending</h4>
+<% end %>
+<div class="comparison-box" style="display:flex; justify-content: space-around; align-items: center;">
+  <%= link_to @trade.offer do %>
+    <div>
+      <h4><%= @trade.offer_title %></h4>
+      <strong>Current Owner</strong> <%= @trade.buyer_username %>
+    </div>
+  <% end %>
+
+    <h2>for</h2>
+
+  <%= link_to @trade.listing do %>
+    <div>
+      <h4> <%= @trade.listing_title %></h4>
+      <strong>Current Owner</strong> <%= @trade.seller_username %>
+    </div>
+  <% end %>
+</div>
+<div style="display: inline;">
+    <%= render 'trades/trade_reception', trade: @trade %>
+</div>
+
