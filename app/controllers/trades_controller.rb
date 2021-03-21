@@ -60,6 +60,7 @@ class TradesController < ApplicationController
   # PATCH/PUT /trades/1 or /trades/1.json
   def update
     trade = Trade.find(params["trade"].to_i)
+    
     if params["respond"] == "accept"
       if current_user.id == trade.listing.seller_id
         trade.listing.update(locked: true)
@@ -70,6 +71,17 @@ class TradesController < ApplicationController
         trade.update(buyer_response: "confirm")
         trade.offer.update(locked: true)
         redirect_to trade.listing, notice: "Trade confirmed. Hooray!" and return
+      end
+      # Decline offer
+    elsif params["respond"] == "decline"
+     if current_user.id == trade.listing.seller_id
+        trade.update!(seller_response: "decline", active: false)
+        redirect_to trade.listing, notice: "Offer declined." and return
+      elsif current_user.id == trade.offer.seller.id
+        trade.update(buyer_response: "decline", active: false)
+        enable_other_offers(trade)
+        trade.offer.update(locked: false)
+        redirect_to trade.listing, notice: "Trade cancelled." and return
       end
     end
     redirect_to trade.listing, alert: "Oops, something went wrong!" and return
@@ -98,7 +110,14 @@ class TradesController < ApplicationController
   private
 
   def disable_other_offers(trade)
-    Trade.includes(:offer).where("trades.offer_id != ?", trade.offer.id).map {|t| t.update!(active: false)}
+    Trade.includes(:listing).where("trades.listing_id = ?", trade.listing.id).includes(:offer).where.not("trades.offer_id = ?", trade.offer.id).map {|t| t.update!(active: false) }
+  end
+
+  def enable_other_offers(trade)
+    Trade.includes(:listing).where("trades.listing_id = ?", trade.listing.id).includes(:offer).where.not("trades.offer_id = ?", trade.offer.id).map { |t| 
+                              unless (t.seller_response == "decline") || (t.buyer_response == "decline")
+                                t.update!(active: true)
+                              end }
   end
     # def self.to_struct
     #   Struct.new(*(k = self.attributes.keys)).new(*self.attributes.values_at(*k))

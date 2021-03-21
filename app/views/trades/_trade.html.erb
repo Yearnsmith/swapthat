@@ -1,7 +1,13 @@
 <h3><%= @trade.title %></h3>
-<%if @trade.buyer_response != "decline" %>
-    <h4>Offer Pending</h4>
+<% case display_trade_status @trade %>
+<% when :buyer_accepted %>
+  <h4> Trade confirmed </h4>
+<% when :seller_decined %>
+  <h4> Trade Declined </h4>
+<% else %>
+  <h4>Offer Pending</h4>
 <% end %>
+
 <div class="comparison-box" style="display:flex; justify-content: space-around; align-items: center;">
   <%= link_to @trade.offer do %>
     <div>
