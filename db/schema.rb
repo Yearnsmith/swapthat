@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_03_16_135927) do
+ActiveRecord::Schema.define(version: 2021_03_20_175547) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -30,8 +30,8 @@ ActiveRecord::Schema.define(version: 2021_03_16_135927) do
     t.string "title", limit: 110, null: false
     t.bigint "listing_id", null: false
     t.bigint "offer_id", null: false
-    t.boolean "seller_accepted"
-    t.boolean "buyer_accepted"
+    t.string "seller_response", limit: 10, default: "unactioned", null: false
+    t.string "buyer_response", limit: 10, default: "unactioned", null: false
     t.boolean "active", default: true, null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
