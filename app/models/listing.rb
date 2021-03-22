@@ -23,5 +23,7 @@ class Listing < ApplicationRecord
   ## T2A2-10 As a user I want to create a listing
   # => Ensure Listing object has title
   validates_presence_of :title
-
+  
+  has_one_attached :photo
+  
 end

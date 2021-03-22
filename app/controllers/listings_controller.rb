@@ -1,7 +1,7 @@
 class ListingsController < ApplicationController
   # include UserConcerns
   before_action :authenticate_user!, only: [:new, :create, :edit, :update, :destroy]
-  before_action :set_listing, only: [ :show, :create, :edit, :update, :destroy ]
+  before_action :set_listing, only: [ :show, :edit, :update, :destroy ]
   before_action :verify_seller, only: [ :edit, :update, :destroy]
 
   # GET /listings or /listings.json
@@ -29,13 +29,10 @@ class ListingsController < ApplicationController
     # @listing = Listing.new(seller_id: @user.id, title: listing_params[:title], description: listing_params[:description])
     @listing = Listing.new(listing_params)
     @listing.seller = current_user
-    
-    respond_to do |format|
-      if @listing.save
-        format.html { redirect_to :listing, notice: "Listing was successfully created." }
-      else
-        format.html { render :new, status: :unprocessable_entity }
-      end
+    @listing.photo.attach(listing_params[:photo])
+
+    if @listing.save
+      redirect_to @listing, notice: "Listing was successfully created."
     end
   end
 
@@ -79,6 +76,6 @@ class ListingsController < ApplicationController
     # Only allow a list of trusted parameters through.
     def listing_params
       # user = current_user
-      params.require(:listing).permit(:title, :description, :suggestion)
+      params.require(:listing).permit(:title, :description, :suggestion, :photo)
     end
 end

@@ -30,6 +30,7 @@ class TradesController < ApplicationController
       @trade = @current_listing.as_listings.new(trade_params) #wrong?
     else
       @offer = trade_params[:listing_attributes]
+      @offer << photo.attach(listing_params[:photo])
       @trade = @current_listing.as_listings.new(
           offer: Listing.create(
               seller: current_user, 
@@ -130,7 +131,7 @@ class TradesController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def trade_params
-      params.require(:trade).permit(:listing_id, :offer_id, :id, :listing, listing_attributes: [:title, :description, :suggestion])
+      params.require(:trade).permit(:listing_id, :offer_id, :id, :photo, :listing, listing_attributes: [:title, :description, :suggestion])
     end
 
     # def set_listing
