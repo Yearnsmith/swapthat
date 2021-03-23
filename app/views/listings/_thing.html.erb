@@ -1,0 +1,10 @@
+<div class="card equal-height">
+  <div class="card-header">
+    <h3 class="title is-size-4"> <%= link_to listing.title, listing %></h3>
+  </div>
+    <div class="subtitle">
+      <%= listing.seller.username %> |
+      <%= listing.locked == false ? "Available" : "Trade Pending" %>
+    </div>
+  <%= render partial: "thing_content", locals: {listing: listing} %>
+</div>

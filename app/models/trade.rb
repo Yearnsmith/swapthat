@@ -1,8 +1,8 @@
 class Trade < ApplicationRecord
   # T2A2-18 As a user I want to make an offer on other
   # people's listings
-  belongs_to :listing, class_name: 'Listing'
-  belongs_to :offer, class_name: 'Listing'
+  belongs_to :listing, class_name: 'Listing'#, inverse_of: :as_listings
+  belongs_to :offer, class_name: 'Listing'#, inverse_of: :as_offers
 
   delegate :title, to: :listing, prefix: true
   # => trade.listing.title, as listing_title
@@ -13,7 +13,7 @@ class Trade < ApplicationRecord
   delegate :username, :id, to: :offer, prefix: :buyer
   # => trade.offer.user.username as trade.buyer_username
   
-  accepts_nested_attributes_for :listing, reject_if: :all_blank
+  accepts_nested_attributes_for :offer, reject_if: :all_blank
 
   #####################
 # SCOPES

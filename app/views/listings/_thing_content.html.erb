@@ -1,0 +1,16 @@
+<div class="card-image has-text-centered">
+  <figure class="image">
+    <% if listing.photo.attached? %>
+      <%= image_tag listing.photo, alt: "An image of the item or items listed"%>
+    <% else %>
+      <div class="card-content">
+        <div class="content">This post has no image</div>
+      </div>
+    <% end %>
+  </figure>
+</div>
+<div class="card-content">
+    <div class"content">
+      <%= listing.description %>
+    </div>
+</div>

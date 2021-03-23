@@ -1,12 +1,10 @@
 <h1>Listings</h1>
-  <div class= "card">
-    <% @listings.each do |listing| %>
-      <div style="border: solid 1px black; padding: .5rem; margin: .75rem">
-        <strong><%= link_to listing.title, listing %></strong><br> 
-        <strong><%= listing.seller.username %></strong> | 
-        <%= listing.locked == false ? "Available" : "Trade Pending" %>
-      </div>
-    <% end %>
-    </div>
-
 <%= link_to 'New Listing', new_listing_path %>
+<div class="columns is-multiline">
+    <% @listings.each do |listing| %>
+    <div class= "column is-one-quarter is-info">
+        <%= render partial: 'thing', locals: {listing: listing} %>
+    </div>
+    <% end %>
+</div>
+

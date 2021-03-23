@@ -13,7 +13,7 @@ class Listing < ApplicationRecord
   # THIS IS LISTING
   # TODO: change :as_listings to :as_listing_in_trades
   has_many :as_listings, foreign_key: :listing_id, class_name: 'Trade'
-  has_many :offers, through: :as_listings
+  has_many :offers, through: :as_listings, dependent: :destroy
 
   # THIS IS OFFERING
   # TODO: change :as_offers to :as_offers_in_trades

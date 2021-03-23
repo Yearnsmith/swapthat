@@ -1,6 +1,8 @@
 <h3>Make an offer</h3>
+
 <%if user_signed_in? %>
-  <%= form_with model: [current_listing, @trade = Trade.new(listing_id: current_listing)], local: true do |form| %>
+  <%#= form_with model: [current_listing, @trade = Trade.new(listing_id: current_listing)], local: true do |form| %>
+  <%= form_with model: [current_listing, @trade], local: true do |form| %>
     <% if @trade.errors.any? %> 
       <div id="error_explanation">
         <h2><%= pluralize(trade.errors.count, "error") %> prohibited this trade from being saved:</h2>
@@ -11,34 +13,40 @@
         </ul>
       </div>
     <% end %> <%# end errors %>
+<!--https://stackblitz.com/edit/medium-tabs?file=style.css-->
+  <%= radio_button_tag 'tabs', 'select', true, class: 'tab-selector' %>
+  <%= label_tag 'tabs_select', 'select Item', class: 'tab-selector-label'%>
+
+  <%= radio_button_tag 'tabs', 'make_new_listing', false, class: 'tab-selector' %>
+  <%= label_tag 'tabs_make_new_listing', 'Make New Listing', class: 'tab-selector-label' %>
+
     <%# T2A2-18 As a user I want to make an offer on other peoples listings%>
-    <div class="field">
+    <div class="tab content1">
         <%# collection_select with method that gets all current_user's listings with locked: false %>
         <%# if time permits, do a fancy checkboxes rendering these as cards %> 
         <h4>Select a Listing</h4>
         <%= form.label :offer_id, "Your listings" %>
         <%= form.collection_select :offer_id, current_user.listings_to_offer, :id, :title, prompt: true %>
     </div>
-
-    <strong>Or</strong>
-
-    <div>
+    <div class="tab content2">
       <h4>Make new listing</h4>
-        <div class="field">
-          <%= label_tag "trade[listing_attributes][title]", "Listing Title" %>
-          <%= text_field_tag "trade[listing_attributes][title]" %>          
-        </div>
+      <%= form.fields_for :offer do |offer_form| %>
+   
+        <%= offer_form.label :title %>
+        <%= offer_form.text_field :title %>
+          
+        <%= offer_form.label :description %>
+        <%= offer_form.text_area :description %>
 
-        <div class="field">
-          <%= label_tag "trade[listing_attributes][description", "Listing Description" %>
-          <%= text_area_tag "trade[listing_attributes][description]" %>
-        </div>
+        <%= form.file_field :photo %>
+          <%end%>
     </div>
-  <div class="actions" >
-    <%= form.submit %>
-  </div>
+    <div class="actions" >
+      <%= form.submit %>
+    </div>
 
   <% end %><%# end form %>
+
 <% else %>
     <%= link_to "Login", new_user_session_path %> |
     <%= link_to "Sign Up", new_user_registration_path %>

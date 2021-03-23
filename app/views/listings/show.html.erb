@@ -1,60 +1,41 @@
-<h2><%= @listing.title %></h2>
-
-<h4 style="display: inline">Seller:</h4>
-<p>
-  <%= @listing.seller.username %> | 
-  <%= @listing.locked == false ? "<strong>Available</strong>".html_safe : "<strong>This listing is unavailable for trade</strong".html_safe %>
-</p>
-
-<% if @listing.photo.attached? %>
-  <%= image_tag @listing.photo, width: 450, class: "listing image" %>
-<%end%>
-
-<h4>Description</h4>
-<p>
-  <%= @listing.description %>
-</p> 
-
-<% if @listing.suggestion != "" %>
-  <h4>Swap Suggestion:</h4>
-  <p>
-    <%= @listing.suggestion %>
-  </p>
-<% end %>
-
-<%= link_to 'Edit', edit_listing_path(@listing) %>
-
-<%# Will use this to dynamically display form. When I have time %>
-<%#= link_to 'Make an offer!', new_trade_path, listing: @current_listing, method: :post %>
-
-<% unless user_signed_in? && (@listing.seller == current_user) %>
-
-  <div id="form_card" style="margin-bottom:1rem;">
-
-    <% if @listing.locked? %>
-      <p style="font-size: 2rem">
-        This listing is marked pending. It has probably been offered to a listing.
-      </p>
-    <% else %>
-      <%= render partial: "trades/form", locals: { current_listing: @listing } %>
-    <% end %>
-
+<section id="listing-content" class="section">
+  <div class="container is-max-desktop">
+    <%= render partial: 'thing', locals:{listing: @listing} %>
   </div>
+</section>
+<section id="make-an-offer" class="section">
+<div class="container is-max-desktop">
+  <div class="box">
+    <% unless user_signed_in? && (@listing.seller == current_user) %>
 
-<%end%>
+      <div id="form_card" style="margin-bottom:1rem;">
 
-<% if @listing.offers.any? %>
-  <div id="all-trades" style="background-color: #bbbbbb ;padding:1rem 1rem; margin: 1rem 1.5rem;">
-
-    <h3 style="margin-top:0;">Offers</h3>
-
-    <% @listing.as_listings.each do |trade| %>
-      <% @trade = trade %>
-      <div style="border: 1px solid black; padding:.5rem; margin:.75rem 2.5rem">
-        <%= render 'trades/trade', locals: {trade: @trade} %>
-        <%= link_to("View Trade", trade) %>
+        <% if @listing.locked? %>
+          <p style="font-size: 2rem">
+            This listing is marked pending.
+          </p>
+        <% else %>
+          <%= render partial: "trades/form", locals: { current_listing: @listing } %>
+        <% end %>
       </div>
+
     <%end%>
+    </div>
   </div>
-<%end%>
-<%= link_to 'Back', listings_path %>
+</section>
+
+  <% if @listing.offers.any? %>
+    <div id="all-trades" style="background-color: #bbbbbb ;padding:1rem 1rem; margin: 1rem 1.5rem;">
+
+      <h3 style="margin-top:0;">Offers</h3>
+
+      <% @listing.as_listings.each do |trade| %>
+        <% @trade = trade %>
+        <div style="border: 1px solid black; padding:.5rem; margin:.75rem 2.5rem">
+          <%= render 'trades/trade', locals: {trade: @trade} %>
+          <%= link_to("View Trade", trade) %>
+        </div>
+      <%end%>
+    </div>
+  <%end%>
+  <%= link_to 'Back', listings_path %>

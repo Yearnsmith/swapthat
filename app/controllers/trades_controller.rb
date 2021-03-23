@@ -11,10 +11,8 @@ class TradesController < ApplicationController
   def show
   end
   # GET /trades/new
-  # def new
-  #   @trade = 
-  #   Trade.new(listing_id: params[:listing])
-  # end
+# def new
+# end
 
   # GET /trades/1/edit
   def edit
@@ -29,8 +27,9 @@ class TradesController < ApplicationController
     if trade_params["offer_id"] != ""
       @trade = @current_listing.as_listings.new(trade_params) #wrong?
     else
-      @offer = trade_params[:listing_attributes]
-      @offer << photo.attach(listing_params[:photo])
+      @offer = trade_params[:offer_attributes]
+      pp @offer
+      # @trade = @current_listing.as_listings.new(
       @trade = @current_listing.as_listings.new(
           offer: Listing.create(
               seller: current_user, 
@@ -38,6 +37,7 @@ class TradesController < ApplicationController
               description: @offer[:description], 
               suggestion: @offer[:suggestion],
               ))
+      @trade.offer.photo.attach(trade_params[:photo])
     end
     # Check to see if listing is a pending offer before processing any more code.
     # TODO: Refactor logic to Model
@@ -131,7 +131,7 @@ class TradesController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def trade_params
-      params.require(:trade).permit(:listing_id, :offer_id, :id, :photo, :listing, listing_attributes: [:title, :description, :suggestion])
+      params.require(:trade).permit(:listing_id, :offer_id, :id, :photo, :listing, offer_attributes: [:title, :description, :suggestion])
     end
 
     # def set_listing

@@ -3,6 +3,7 @@
 class Listings::TradesController < TradesController
   before_action :set_listing, only: %i[create edit update]
 
+
   private
 
     def set_listing

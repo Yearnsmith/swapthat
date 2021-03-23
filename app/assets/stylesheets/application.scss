@@ -1,0 +1,50 @@
+/*
+ * This is a manifest file that'll be compiled into application.css, which will include all the files
+ * listed below.
+ *
+ * Any CSS and SCSS file within this directory, lib/assets/stylesheets, or any plugin's
+ * vendor/assets/stylesheets directory can be referenced here using a relative path.
+ *
+ * You're free to add application-wide styles to this file and they'll appear at the bottom of the
+ * compiled file so the styles you add here take precedence over styles defined in any other CSS/SCSS
+ * files in this directory. Styles in this file should be added after the last require_* statement.
+ * It is generally better to create a new file per style scope.
+ *
+*= require bulma/bulma
+*= require_tree .
+*= require_self
+*/
+/*https://stackblitz.com/edit/medium-tabs?file=style.css*/
+input.tab-selector {
+  position: absolute;
+  left: -9999px;}
+
+.tab-selector-label {
+    display: inline-block;
+    font-size: 1.25rem;
+    padding-right: .5rem;
+    }
+
+.tab-selector + .tab-selector-label {
+  border: 1px solid #999;
+  background: #fff;
+  padding: 4px 12px;
+  border-radius: 4px 4px 0 0;
+  position: relative;
+  top: 1px;
+}
+.tab-selector:checked + .tab-selector-label {
+  border-bottom: 1px solid transparent;
+  background: hsl(141, 71%, 48%);
+}
+.tab-selector ~ .tab {
+  border-top: 1px solid #999;
+  padding: 12px;
+}
+
+.tab-selector ~ .tab {display: none}
+
+#tabs_select:checked ~ .tab.content1,
+#tabs_make_new_listing:checked ~ .tab.content2{
+    display: block;
+}
