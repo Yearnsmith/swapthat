@@ -6,5 +6,8 @@
       <%= listing.seller.username %> |
       <%= listing.locked == false ? "Available" : "Trade Pending" %>
     </div>
-  <%= render partial: "thing_content", locals: {listing: listing} %>
+    <%= link_to listing do %>
+      <%= render partial: "thing_content", locals: {listing: listing} %>
+    <% end %>
+    </a>
 </div>
