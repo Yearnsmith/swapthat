@@ -1,8 +1,11 @@
 class Trade < ApplicationRecord
+  resourcify
   # T2A2-18 As a user I want to make an offer on other
   # people's listings
   belongs_to :listing, class_name: 'Listing'#, inverse_of: :as_listings
   belongs_to :offer, class_name: 'Listing'#, inverse_of: :as_offers
+
+  has_many_attached :photo
 
   delegate :title, to: :listing, prefix: true
   # => trade.listing.title, as listing_title

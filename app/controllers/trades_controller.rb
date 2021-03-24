@@ -2,6 +2,7 @@ class TradesController < ApplicationController
   before_action :authenticate_user!, only: [:new, :create, :edit, :update, :destroy]
   before_action :set_trade, only: %i[ show edit destroy ]
   # before_action :set_listing, only: %i[create edit update]
+  skip_load_and_authorize_resource :listing
 
   # GET /trades or /trades.json
   def index
@@ -19,6 +20,7 @@ class TradesController < ApplicationController
   end
 
   def create
+    # TODO: Refactor logic to Model
     # T2A2-18 make an offer on other peoples' listings
     # Get @listing from listings/trades_controller,
 
@@ -26,10 +28,15 @@ class TradesController < ApplicationController
     # Store the new trade in instance variable
     if trade_params["offer_id"] != ""
       @trade = @current_listing.as_listings.new(trade_params) #wrong?
+      # commented line below is causing a not-authorised error - even on admins.
+      # authorize! :create, @current_listing
+      # Calling Authorize down here because using the
+      # callback wasn't working. Probably something to
+      # do with nested resources, and nested list. But
+      # couldn't get the suggestions in the docs to work.
+      authorize! :create, @trade
     else
       @offer = trade_params[:offer_attributes]
-      pp @offer
-      # @trade = @current_listing.as_listings.new(
       @trade = @current_listing.as_listings.new(
           offer: Listing.create(
               seller: current_user, 
@@ -38,9 +45,12 @@ class TradesController < ApplicationController
               suggestion: @offer[:suggestion],
               ))
       @trade.offer.photo.attach(trade_params[:photo])
+      # Authorize down here, because otherwise there is no
+      # "seller-id" to check against. Changes will not be
+      # saved until after the next end statement.
+      authorize! :create, @trade
     end
     # Check to see if listing is a pending offer before processing any more code.
-    # TODO: Refactor logic to Model
     if @current_listing.locked == true
       render "listings/show", flash.now[:alert] = "This item is currently being offered to a trade" and return
     end
@@ -86,17 +96,6 @@ class TradesController < ApplicationController
       end
     end
     redirect_to trade.listing, alert: "Oops, something went wrong!" and return
-    # if !params.include? "trade"
-    #   @trade.
-    # respond_to do |format|
-    #   if @trade.update(trade_params)
-    #     format.html { redirect_to @trade, notice: "Trade was successfully updated." }
-    #     format.json { render :show, status: :ok, location: @trade }
-    #   else
-    #     format.html { render :edit, status: :unprocessable_entity }
-    #     format.json { render json: @trade.errors, status: :unprocessable_entity }
-    #   end
-    # end
   end
 
   # DELETE /trades/1 or /trades/1.json
@@ -110,29 +109,28 @@ class TradesController < ApplicationController
 
   private
 
+  # Todo: move logic out of controller
   def disable_other_offers(trade)
     Trade.includes(:listing).where("trades.listing_id = ?", trade.listing.id).includes(:offer).where.not("trades.offer_id = ?", trade.offer.id).map {|t| t.update!(active: false) }
   end
 
+  # Todo: move logic out of controller
   def enable_other_offers(trade)
     Trade.includes(:listing).where("trades.listing_id = ?", trade.listing.id).includes(:offer).where.not("trades.offer_id = ?", trade.offer.id).map { |t| 
                               unless (t.seller_response == "decline") || (t.buyer_response == "decline")
                                 t.update!(active: true)
                               end }
   end
-    # def self.to_struct
-    #   Struct.new(*(k = self.attributes.keys)).new(*self.attributes.values_at(*k))
-    # end
 
-    # Use callbacks to share common setup or constraints between actions.
-    def set_trade
-     @trade = Trade.find(params[:id])
+  def set_trade
+    if params[:id]
+      @trade = Trade.find(params[:id])
     end
-
-    # Only allow a list of trusted parameters through.
-    def trade_params
-      params.require(:trade).permit(:listing_id, :offer_id, :id, :photo, :listing, offer_attributes: [:title, :description, :suggestion])
-    end
+  end
+  # Only allow a list of trusted parameters through.
+  def trade_params
+    params.require(:trade).permit(:listing_id, :offer_id, :id, :photo, :listing, offer_attributes: [:title, :description, :suggestion])
+  end
 
     # def set_listing
     #   @current_listing = Listing.find(params[:listing_id])

@@ -1,4 +1,5 @@
 class Listing < ApplicationRecord
+  resourcify
   # T2A2-10 As a user I want to create a listing
   # => Set up relation to user, who Listing refers to as :seller
   ## => Users can both make listings (as a seller) and offer their own listings (as a buyer).

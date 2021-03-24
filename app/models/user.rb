@@ -1,4 +1,5 @@
 class User < ApplicationRecord
+  rolify
   attr_writer :login #for logging in with username || email (See Devise Methods below)
   
   # T2A2-10 As a user I want to create a listing

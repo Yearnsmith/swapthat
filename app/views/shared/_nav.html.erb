@@ -25,7 +25,7 @@
   </div>
   
   <% if user_signed_in? %>
-    <%= link_to "Logout", destroy_user_session_path, method: :delete, class: "navbar-item" %>
+    <%= button_to "Logout", destroy_user_session_path, method: :delete, class: "navbar-item" %>
     <span class="navbar-item"> Hello, <%= current_user.username %> :)</span>
   <%else%>
     <%= link_to "Login", new_user_session_path, class: "navbar-item" %> | 

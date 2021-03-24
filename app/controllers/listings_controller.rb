@@ -1,12 +1,17 @@
 class ListingsController < ApplicationController
   # include UserConcerns
   before_action :authenticate_user!, only: [:new, :create, :edit, :update, :destroy]
-  before_action :set_listing, only: [ :show, :edit, :update, :destroy ]
-  before_action :verify_seller, only: [ :edit, :update, :destroy]
+
+  load_and_authorize_resource
+  #Leave here in case cancan breaks things again:
+  # before_action :set_listing, only: [ :show, :edit, :update, :destroy ]
+  # before_action :verify_seller, only: [ :edit, :update, :destroy]
+
+
 
   # GET /listings or /listings.json
   def index
-    @listings = Listing.all
+    @listings = Listing.order(created_at: :desc).where(locked:false).eager_load(:seller)
   end
 
   # GET /listings/1 or /listings/1.json
@@ -72,6 +77,7 @@ class ListingsController < ApplicationController
   end
 
   private
+
     # Use callbacks to share common setup or constraints between actions.
     def set_listing
       @listing = Listing.find(params[:id])

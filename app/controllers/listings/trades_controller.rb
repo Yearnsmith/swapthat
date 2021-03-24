@@ -1,7 +1,9 @@
 # Defines a controller for the nested route. This ensures that the parent 'trades_controller'
 # has a @listing to deal with.
 class Listings::TradesController < TradesController
+  
   before_action :set_listing, only: %i[create edit update]
+  # authorize_resource :listing
 
 
   private
