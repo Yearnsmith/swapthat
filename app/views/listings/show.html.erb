@@ -22,28 +22,29 @@
             <p>
               This listing is marked pending.
             </p>
-        <% else %>
-            <%= render partial: "trades/form", locals: { current_listing: @listing } %>
-          </div>
-        <% end %>
-
       </div>
+    <% else %>
+      <div class="box">
+          <%= render partial: "trades/form", locals: { current_listing: @listing } %>
+      </div>
+    <% end %>
+
     <%end%>
   </div>
 </section>
 <section id="listings-trades-container" class="section">
-    <div id="all-trades" class="container is-max-desktop">
   <% if @listing.offers.any? %>
+    <div id="all-trades" class="container is-max-desktop">
 
-      <h3 class="title is-3">Offers</h3>
+        <h3 class="title is-3">Offers</h3>
 
-      <% @listing.as_listings.each do |trade| %>
-        <% @trade = trade %>
-        <div class="card pxy-3">
-          <%= render 'trades/trade', locals: {trade: @trade} %>
-          <%= link_to "View Trade", trade, class: "card-content is-size-5" %>
-        </div>
-      <%end%>
+        <% @listing.as_listings.each do |trade| %>
+          <% @trade = trade %>
+          <div class="card pxy-3">
+            <%= render 'trades/trade', locals: {trade: @trade} %>
+            <%= link_to "View Trade", trade, class: "card-content is-size-5" %>
+          </div>
+        <%end%>
     </div>
   <%end%>
 </section>
