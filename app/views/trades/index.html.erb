@@ -15,15 +15,10 @@
     <% @trades.each do |trade| %>
       <tr>
         <td><%= trade.listing_id %></td>
-        <td><%= trade.offering_id %></td>
+        <td><%= trade.offer_id %></td>
         <td><%= link_to 'Show', trade %></td>
-        <td><%= link_to 'Edit', edit_trade_path(trade) %></td>
         <td><%= link_to 'Destroy', trade, method: :delete, data: { confirm: 'Are you sure?' } %></td>
       </tr>
     <% end %>
   </tbody>
 </table>
-
-<br>
-<%# Extract the link below into listings#show page, then delete %>
-<%= link_to 'New Trade', new_trade_path(@listing) %>

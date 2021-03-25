@@ -3,10 +3,11 @@ class TradesController < ApplicationController
   before_action :set_trade, only: %i[ show edit destroy ]
   # before_action :set_listing, only: %i[create edit update]
   skip_load_and_authorize_resource :listing
-
+  load_and_authorize_resource :only => :index
   # GET /trades or /trades.json
   def index
-    # @trades = Trade.eager_load(:trades)
+    authorize! :index, @trades
+    @trades = Trade.order(created_at: :desc).eager_load(:listing)
   end
   # GET /trades/1 or /trades/1.json
   def show
@@ -15,9 +16,6 @@ class TradesController < ApplicationController
 # def new
 # end
 
-  # GET /trades/1/edit
-  def edit
-  end
 
   def create
     # TODO: Refactor logic to Model
@@ -101,10 +99,7 @@ class TradesController < ApplicationController
   # DELETE /trades/1 or /trades/1.json
   def destroy
     @trade.destroy
-    respond_to do |format|
-      format.html { redirect_to trades_url, notice: "Trade was successfully destroyed." }
-      format.json { head :no_content }
-    end
+    redirect_to trades_path, notice: "Trade was successfully destroyed."
   end
 
   private

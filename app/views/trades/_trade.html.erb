@@ -1,30 +1,44 @@
-<h3><%= @trade.title %></h3>
-<% case display_trade_status @trade %>
-<% when :buyer_accepted %>
-  <h4> Trade confirmed </h4>
-<% when :seller_decined %>
-  <h4> Trade Declined </h4>
-<% else %>
-  <h4>Offer Pending</h4>
-<% end %>
+<div class="card has-text-centered has-background-primary-light">
+  <h3 class="mt-2 title is-3 is-spaced is-centered"><%= @trade.title %></h3>
+  <% case display_trade_status @trade %>
+  <% when :seller_decined %>
+    <h4 class="subtite is-4 is-centered">Trade Declined</h4>
+    <%= current_user ||= current_user == @trade.seller_id ? "You have" : "#{@trade.seller_username} has" %> declined this offer. 
 
-<div class="comparison-box" style="display:flex; justify-content: space-around; align-items: center;">
-  <%= link_to @trade.offer do %>
-    <div>
-      <h4><%= @trade.offer_title %></h4>
-      <strong>Current Owner</strong> <%= @trade.buyer_username %>
-    </div>
+  <% when :seller_accepted %>
+      <h4 class="subtitle is-4 is-centered">Awaiting Confirmation</h4>
+      <p>
+          <%= current_user ||= current_user == @trade.seller_id ? "You have" : "#{@trade.seller_username} has" %> accepted this offer.
+      </p>
+
+  <% when :buyer_confirmed %>
+      <h4 class="subtitle is-4 is-centered">Trade Confirmed</h4>
+      This trade has been accepted by both parties! :)
+
+  <% else %>
+      <h4 class="subtitle is-4 is-centered">Trade Pending</h4>
   <% end %>
 
-    <h2>for</h2>
+<div class="comparison-box is-flex is-flex-wrap-wrap is-justify-content-space-around is-align-items-center">
+ 
+  <%= link_to @trade.offer do %>
+  <h4 class="title is-4"><% @trade.offer_title %></h4>
+    <div class="is-flex is-flex-direction-column is-mini-card">
+      <%= render partial: 'listings/thing_content', locals:{listing: @listing = Listing.find((@trade.offer_id).to_i)} %>
+    </div>
+  <%end%>
+
+  <span class="is-inline-block is-size-3 mx-6">for</span>
 
   <%= link_to @trade.listing do %>
-    <div>
-      <h4> <%= @trade.listing_title %></h4>
-      <strong>Current Owner</strong> <%= @trade.seller_username %>
+    <h4 class="title is-4"><% @trade.listing_title %></h4>
+    <div class="is-flex is-flex-direction-column flex-wrap is-mini-card">
+      <%= render partial: 'listings/thing_content', locals:{listing: @listing = Listing.find((@trade.listing_id).to_i)} %>
     </div>
-  <% end %>
+  <%end%>
+
 </div>
+
 <div style="display: inline;">
     <%= render 'trades/trade_reception', trade: @trade %>
 </div>

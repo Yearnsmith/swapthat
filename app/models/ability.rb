@@ -5,15 +5,27 @@ class Ability
 
   def initialize(user)
 
-    if user.has_role? :member
-        can :read, :all
+    # if user.has_role? :admin
+    #     can :manage, :all
+    # elsif user.has_role? :member
+    #     can :read, :all
+    #     can :manage, Listing, seller_id: user.id
+    #     can :create, Trade, offer: { seller: { id: user.id } }
+    # else
+    #     can :read, :all
+    # end
+
+        user ||= User.new # guest user (not logged in)
+        can :read, [Listing, User]
+        can :read, Trade
+        return unless user.has_role? :member
         can :manage, Listing, seller_id: user.id
         can :create, Trade, offer: { seller: { id: user.id } }
-    elsif user.has_role? :admin
+        cannot :destroy, Trade
+        cannot :index, Trade
+        return unless user.has_role? :admin
         can :manage, :all
-    else
-        can :read, :all
-    end
+        
     # Define abilities for the passed in user here. For example:
     #
     #   user ||= User.new # guest user (not logged in)

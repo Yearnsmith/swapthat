@@ -1,4 +1,8 @@
- <h2>Listings for <%= @shown_user.username %></h2>
- <% @listings.each do |listing| %>
-    <%=link_to listing.title, listing_path(id: listing.id) %><br>
- <% end %>
+ <h2 class="title is-2">Listings for <%= @shown_user.username %></h2>
+ <div class="content">
+     <ul class="is-size-6">
+     <% @listings.each do |listing| %>
+       <li class="py-2"><%=link_to listing.title, listing_path(id: listing.id) %></li>
+     <% end %>
+    </ul>
+</div>

@@ -1,0 +1,7 @@
+<div class="columns is-multiline">
+    <% @listings.each do |listing| %>
+        <div class= "column is-one-quarter is-info">
+            <%= render partial: 'listings/thing', locals: {listing: listing} %>
+        </div>
+    <% end %>
+</div>

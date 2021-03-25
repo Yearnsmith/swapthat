@@ -7,9 +7,9 @@ class Trade < ApplicationRecord
 
   has_many_attached :photo
 
-  delegate :title, to: :listing, prefix: true
+  delegate :title, :id, to: :listing, prefix: true
   # => trade.listing.title, as listing_title
-  delegate :title, to: :offer, prefix: true
+  delegate :title, :id, to: :offer, prefix: true
   # => trade.offer.title, as offer_title
   delegate :username, :id, to: :listing, prefix: :seller
   # => trade.listing.user.username as trade.seller_username

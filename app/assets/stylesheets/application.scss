@@ -48,3 +48,7 @@ input.tab-selector {
 #tabs_make_new_listing:checked ~ .tab.content2{
     display: block;
 }
+
+.is-mini-card{
+  max-width: 15rem;
+}

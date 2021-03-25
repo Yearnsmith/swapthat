@@ -1,11 +1,9 @@
 <%#= This is a temporary file to enable sign-in/out and provide navigation before UI is implemented. :) %>
 <nav class="navbar" role="navigation" aria-label="main navigation">
   <div class="navbar-brand">
-    <%= form_with url: "/search", method: :get do |form| %>
-      <%= form.label :query, "Search for:" %>
-      <%= form.text_field :query, value: "ThisThat" %>
-      <%= form.submit "Search" %>
-    <% end %>
+    <%= link_to root_path do %>
+      <h1 class="navbar-item title is-3 has-text-success has-background-info-light">ThatThis</h1>
+      <% end %>
   </div>
 
   <div class="navbar-menu is-active">
@@ -28,7 +26,7 @@
     <%= button_to "Logout", destroy_user_session_path, method: :delete, class: "navbar-item button" %>
     <span class="navbar-item"> Hello, <%= current_user.username %> :)</span>
   <%else%>
-    <%= link_to "Login", new_user_session_path, class: "navbar-item button" %> | 
+    <%= link_to "Login", new_user_session_path, class: "navbar-item button" %> 
     <%= link_to "Sign Up", new_user_registration_path, class: "navbar-item button" %>
   <% end %>
 </nav>

@@ -1,7 +1,12 @@
-<div style="display: flex; flex-direction: column; justify-content: space between;">
+<div id="trade-content-container" class="section">
+    <div class="container is-max-desktop">
+        <%= render 'trade', locals: {trade: @trade} %>
+        <div class="box is-max-desktop is-flex is-justify-content-space-between">
+            <%= link_to 'Back', request.referer, class:"button" %>
+            <% if can? :destroy, @trade %>
+                <%= button_to 'Delete', trade_path(@trade), method: :delete, data:{ confirm: "Are you sure you want to delete?" }, class: "button is-danger is-light" %>
+            <% end %>
+        </div>
+    </div>
 
-<%= render 'trade', locals: {trade: @trade} %>
-
-<div>
-<%= link_to 'Edit', edit_trade_path(@trade) %> <%= link_to 'Back', request.referer %>
 </div>

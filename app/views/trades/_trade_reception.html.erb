@@ -1,23 +1,12 @@
-<% case display_trade_status @trade %>
-<% when :put_buttons %>
-    <h3 style="text-align: center">Accept Trade?</h3>
+<%# case display_trade_status @trade %>
+<% if (display_trade_status(@trade)) == :put_buttons %>
+    <h3 class="title is-3 is-centered">Accept Trade?</h3>
+
     <div style="display: flex; justify-content: space-around;">
-        <%= button_to "Decline", url_for(controller:'trades', action: 'update', trade: @trade, respond: 'decline'), method: :patch%>
-        <%= button_to "Accept", url_for(controller:'trades', action: 'update', trade: @trade, respond: 'accept'), method: :patch%>
+
+        <%= button_to "Decline", url_for(controller:'trades', action: 'update', trade: @trade, respond: 'decline'), method: :put, class: "button is-danger"%>
+        <%= button_to "Accept", url_for(controller:'trades', action: 'update', trade: @trade, respond: 'accept'), method: :put, class: "button is-success" %>
+
     </div>
-<% when :seller_decined %>
-    <h3>Trade Declined</h3>
-    <%= current_user ||= current_user == @trade.seller_id ? "You have" : "#{@trade.seller_username} has" %> declined this offer. 
-<% when :seller_accepted %>
-    <% puts "SELLER_ACCEPTED" %>
-    <h3>Awaiting Confirmation</h3>
-    <p>
-        <%= current_user ||= current_user == @trade.seller_id ? "You have" : "#{@trade.seller_username} has" %> accepted this offer.
-    </p>
-<% when :buyer_confirmed %>
-    <h3 style="text-align: center">Trade Confirmed</h3>
-    This trade has been accepted by both parties! :)
-<% else %>
-    <h3 style="text-align: center">Trade Pending</h3>
 <% end %>
 

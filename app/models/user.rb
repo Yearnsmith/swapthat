@@ -32,8 +32,8 @@ class User < ApplicationRecord
   # T2A2-12 As a user I want to sign up to the service
   ## Include default devise modules. Others available are:
   ## :lockable, and :timeoutable
-  devise :database_authenticatable, :registerable, #:omniauthable, # => Add last
-         :recoverable, :rememberable, :validatable, :trackable, :confirmable
+  devise :database_authenticatable,:registerable, #:omniauthable, # => Add last
+         :recoverable, :rememberable, :validatable, :trackable#, :confirmable
 
 
   # As a user I want to make offers on listings

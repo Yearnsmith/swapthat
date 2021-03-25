@@ -16,20 +16,10 @@ class ListingsController < ApplicationController
 
   # GET /listings/1 or /listings/1.json
   def show
-    # @current_listing = Listing.find(params[:id])
-    # @trade = Trade.new(listing: @current_listing)
     current_listing = @listing
 
-    # @book = book.new
-    # @offer = Listing.new(seller: current_user)
-    pp @offer
     @trade = Trade.new(listing: @listing)
-    pp @trade
     @trade.build_offer(seller:current_user)
-    puts "@trade.build_offer(seller:current_user)=>"
-    pp @trade
-    # @trade.build_offer(offer: Listing.new(seller: current_user) )
-    # @book.genres.build
   end
   
   # GET /listings/new

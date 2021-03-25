@@ -2,11 +2,7 @@
     <h1 class="box title is-size-2 mt-3 pxy-2">Available Listings</h1>
     <%= link_to 'New Listing', new_listing_path, class:"button" %>
 </div>
-<div class="columns is-multiline">
-    <% @listings.each do |listing| %>
-    <div class= "column is-one-quarter is-info">
-        <%= render partial: 'thing', locals: {listing: listing} %>
-    </div>
-    <% end %>
-</div>
+
+    <%= render partial: 'shared/listings_block', locals: {listing: @listing} %>
+
 

@@ -3,11 +3,10 @@
     <h3 class="title is-size-4"> <%= link_to listing.title, listing %></h3>
   </div>
     <div class="subtitle">
-      <%= listing.seller.username %> |
-      <%= listing.locked == false ? "Available" : "Trade Pending" %>
+      <%=link_to listing.seller.username, user_path(listing.seller.username) %>
     </div>
     <%= link_to listing do %>
-      <%= render partial: "thing_content", locals: {listing: listing} %>
+      <%= render partial: "listings/thing_content", locals: {listing: listing} %>
     <% end %>
     </a>
 </div>

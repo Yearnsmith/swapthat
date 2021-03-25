@@ -4,11 +4,11 @@ class UsersController < ApplicationController
   # In case of Profile model:
     # https://stackoverflow.com/questions/4307743/profile-model-for-devise-users
   def index
-    @users = User.all
+    @users = User.order(created_at: :asc).includes(:listings)
   end
 
   def show
-    @user = User.find_by(username: params[:username])
+    @user = User.find_by(username: params["username"])
   end
 
   def destroy

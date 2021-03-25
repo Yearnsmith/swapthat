@@ -1,8 +1,15 @@
 class ApplicationController < ActionController::Base
   # Instructions for allowing login with username:
   # => https://github.com/heartcombo/devise/wiki/How-To%3A-Allow-users-to-sign-in-using-their-username-or-email-address
-    before_action :configure_permitted_parameters, if: :devise_controller?
-    # before_action :set_user
+  before_action :configure_permitted_parameters, if: :devise_controller?
+  # before_action :set_user
+
+  rescue_from CanCan::AccessDenied do |exception|
+    respond_to do |format|
+      format.json { head :forbidden }
+      format.html { redirect_to root_url, :alert => exception.message }
+    end
+  end
 
   protected
 

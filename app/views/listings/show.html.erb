@@ -1,41 +1,50 @@
-<section id="listing-content" class="section">
-  <div class="container is-max-desktop">
+<section id="listing-content-container" class="section">
+  <div class="container is-max-desktop has-background-white-bis">
+   
     <%= render partial: 'thing', locals:{listing: @listing} %>
+    <% if can? :destroy, @listing %>
+      <div class="box is-flex is-justify-content-space-between is-info">
+        <%= button_to "Edit this listing", edit_listing_path, method: :get, class: "button is-info is-light" %>
+        <%= button_to "Delete Listing", listing_path(@listing) , method: :delete, data: {confirm: "Are you sure?"}, class: "button is-danger is-light" %>
+      </div>
+    <%end%>
+
   </div>
 </section>
 <section id="make-an-offer" class="section">
 <div class="container is-max-desktop">
-  <div class="box">
-    <% unless user_signed_in? && (@listing.seller == current_user) %>
+  <% unless user_signed_in? && (@listing.seller == current_user) %>
 
-      <div id="form_card" style="margin-bottom:1rem;">
 
-        <% if @listing.locked? %>
-          <p style="font-size: 2rem">
-            This listing is marked pending.
-          </p>
+    <% if @listing.locked? %>
+      <div class="box">
+          <div id="form_card" style="margin-bottom:1rem;">
+            <p>
+              This listing is marked pending.
+            </p>
         <% else %>
-          <%= render partial: "trades/form", locals: { current_listing: @listing } %>
+            <%= render partial: "trades/form", locals: { current_listing: @listing } %>
+          </div>
         <% end %>
-      </div>
 
+      </div>
     <%end%>
-    </div>
   </div>
 </section>
-
+<section id="listings-trades-container" class="section">
+    <div id="all-trades" class="container is-max-desktop">
   <% if @listing.offers.any? %>
-    <div id="all-trades" style="background-color: #bbbbbb ;padding:1rem 1rem; margin: 1rem 1.5rem;">
 
-      <h3 style="margin-top:0;">Offers</h3>
+      <h3 class="title is-3">Offers</h3>
 
       <% @listing.as_listings.each do |trade| %>
         <% @trade = trade %>
-        <div style="border: 1px solid black; padding:.5rem; margin:.75rem 2.5rem">
+        <div class="card pxy-3">
           <%= render 'trades/trade', locals: {trade: @trade} %>
-          <%= link_to("View Trade", trade) %>
+          <%= link_to "View Trade", trade, class: "card-content is-size-5" %>
         </div>
       <%end%>
     </div>
   <%end%>
+</section>
   <%= link_to 'Back', listings_path %>

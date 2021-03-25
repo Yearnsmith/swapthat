@@ -1,2 +1,9 @@
-<h1>Welcome to ThisThat!</h1>
-<p>A <em>simple</em>, <code>open</code> barter system.</p>
+<div class="section">
+    <div class="container is-max-desktop has-text-centered">
+        <h2 class="title is-2">Welcome to ThisThat!</h2>
+        <p>A <em>simple</em>, <code>open</code> barter system.</p>
+    </div>
+</div>
+<div class="section">
+    <%= render partial: "shared/listings_block", locals:{listings: @listings = Listing.order(created_at: :desc).where(locked:false).eager_load(:seller)} %>
+</div>
