@@ -10,13 +10,10 @@ class User < ApplicationRecord
   validates_uniqueness_of :email
   validates :username, presence: true, uniqueness: { case_sensitive: false }
 
-  after_create :assign_role
-  
-  def assign_role
-    User.add_role :member
-    if User.all.count == 1 
-      User.first.add_role :admin
-    end
+  after_create :assign_default_role
+
+  def assign_default_role
+    self.add_role(:member) if self.roles.blank?
   end
 
   # T2A2-13 As a user I want to log in
