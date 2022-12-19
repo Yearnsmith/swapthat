@@ -1,5 +1,5 @@
 {
-  "name": "thisthat",
+  "name": "swapthat",
   "private": true,
   "dependencies": {
     "@rails/actioncable": "^6.0.3-7",
